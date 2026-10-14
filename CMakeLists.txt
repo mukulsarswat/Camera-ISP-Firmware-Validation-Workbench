@@ -98,3 +98,26 @@ add_test(
     NAME WhiteBalanceTests
     COMMAND white_balance_tests
 )
+
+target_sources(camera_isp PRIVATE
+    src/isp/Denoise.cpp
+)
+add_executable(denoise_tests
+    tests/DenoiseTests.cpp
+    src/isp/Denoise.cpp
+)
+
+target_include_directories(denoise_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(denoise_tests
+    PRIVATE ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME DenoiseTests
+    COMMAND denoise_tests
+)
