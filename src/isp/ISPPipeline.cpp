@@ -5,6 +5,7 @@
 #include "../../include/isp/Sharpen.hpp"
 #include "../../include/isp/WhiteBalance.hpp"
 
+#include <chrono>
 #include <stdexcept>
 
 namespace isp {
@@ -13,6 +14,12 @@ ISPPipeline::ISPPipeline(const ISPConfig& config)
     : config_(config) {}
 
 cv::Mat ISPPipeline::process(const cv::Mat& input) const {
+    return processWithMetrics(input).image;
+}
+
+ISPResult ISPPipeline::processWithMetrics(
+    const cv::Mat& input
+) const {
     if (input.empty()) {
         throw std::invalid_argument("Input frame must not be empty");
     }
@@ -24,43 +31,81 @@ cv::Mat ISPPipeline::process(const cv::Mat& input) const {
         );
     }
 
-    // Stage 1: Exposure and gain
-    cv::Mat current = ExposureGain::apply(
-        input,
-        config_.exposureStops,
-        config_.gain
-    );
+    using Clock = std::chrono::steady_clock;
 
-    // Stage 2: White balance (requires a BGR image)
+    const auto pipelineStart = Clock::now();
+
+    ISPResult result;
+    cv::Mat current = input.clone();
+
+    auto runStage = [&](const char* name, auto operation) {
+        const auto start = Clock::now();
+
+        current = operation(current);
+
+        const auto end = Clock::now();
+
+        const double durationMs =
+            std::chrono::duration<double, std::milli>(
+                end - start
+            ).count();
+
+        result.stages.push_back({name, durationMs});
+    };
+
+    runStage("exposure_gain", [&](const cv::Mat& frame) {
+        return ExposureGain::apply(
+            frame,
+            config_.exposureStops,
+            config_.gain
+        );
+    });
+
     if (config_.enableWhiteBalance) {
-        current = WhiteBalance::apply(
-            current,
-            config_.blueGain,
-            config_.greenGain,
-            config_.redGain
-        );
+        runStage("white_balance", [&](const cv::Mat& frame) {
+            return WhiteBalance::apply(
+                frame,
+                config_.blueGain,
+                config_.greenGain,
+                config_.redGain
+            );
+        });
     }
 
-    // Stage 3: Edge-preserving denoising
     if (config_.enableDenoise) {
-        current = Denoise::apply(
-            current,
-            config_.denoiseDiameter,
-            config_.denoiseSigmaColor,
-            config_.denoiseSigmaSpace
-        );
+        runStage("denoise", [&](const cv::Mat& frame) {
+            return Denoise::apply(
+                frame,
+                config_.denoiseDiameter,
+                config_.denoiseSigmaColor,
+                config_.denoiseSigmaSpace
+            );
+        });
     }
 
-    // Stage 4: Sharpening
     if (config_.enableSharpen) {
-        current = Sharpen::apply(
-            current,
-            config_.sharpenAmount,
-            config_.sharpenSigma
-        );
+        runStage("sharpen", [&](const cv::Mat& frame) {
+            return Sharpen::apply(
+                frame,
+                config_.sharpenAmount,
+                config_.sharpenSigma
+            );
+        });
     }
 
-    return current;
+    result.image = current;
+
+    result.outputValid =
+        !result.image.empty() &&
+        result.image.size() == input.size() &&
+        result.image.type() == input.type();
+
+    result.totalDurationMs =
+        std::chrono::duration<double, std::milli>(
+            Clock::now() - pipelineStart
+        ).count();
+
+    return result;
 }
 
 }

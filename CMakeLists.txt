@@ -177,3 +177,50 @@ add_test(
     NAME ISPPipelineTests
     COMMAND isp_pipeline_tests
 )
+
+add_executable(frame_diagnostics_tests
+    tests/FrameDiagnosticsTests.cpp
+    src/diagnostics/FrameDiagnostics.cpp
+    src/isp/ISPPipeline.cpp
+    src/isp/ExposureGain.cpp
+    src/isp/WhiteBalance.cpp
+    src/isp/Denoise.cpp
+    src/isp/Sharpen.cpp
+)
+
+target_include_directories(frame_diagnostics_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(frame_diagnostics_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME FrameDiagnosticsTests
+    COMMAND frame_diagnostics_tests
+)
+
+add_executable(camera_driver_tests
+    tests/SimulatedCameraDriverTests.cpp
+    src/camera/SimulatedCameraDriver.cpp
+)
+
+target_include_directories(camera_driver_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(camera_driver_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME SimulatedCameraDriverTests
+    COMMAND camera_driver_tests
+)
