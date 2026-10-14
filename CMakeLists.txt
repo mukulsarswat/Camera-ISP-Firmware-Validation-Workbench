@@ -147,3 +147,33 @@ add_test(
     NAME SharpenTests
     COMMAND sharpen_tests
 )
+
+target_sources(camera_isp
+    PRIVATE
+        src/isp/ISPPipeline.cpp
+)
+
+add_executable(isp_pipeline_tests
+    tests/ISPPipelineTests.cpp
+    src/isp/ISPPipeline.cpp
+    src/isp/ExposureGain.cpp
+    src/isp/WhiteBalance.cpp
+    src/isp/Denoise.cpp
+    src/isp/Sharpen.cpp
+)
+
+target_include_directories(isp_pipeline_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(isp_pipeline_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME ISPPipelineTests
+    COMMAND isp_pipeline_tests
+)
