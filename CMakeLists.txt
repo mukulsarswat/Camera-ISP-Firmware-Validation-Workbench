@@ -75,3 +75,26 @@ add_test(
     NAME ExposureGainTests
     COMMAND exposure_gain_tests
 )
+target_sources(camera_isp PRIVATE
+    src/isp/WhiteBalance.cpp
+)
+
+add_executable(white_balance_tests
+    tests/WhiteBalanceTests.cpp
+    src/isp/WhiteBalance.cpp
+)
+
+target_include_directories(white_balance_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(white_balance_tests
+    PRIVATE ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME WhiteBalanceTests
+    COMMAND white_balance_tests
+)
