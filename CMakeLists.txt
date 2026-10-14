@@ -51,3 +51,27 @@ add_test(
     NAME CameraFrameTests
     COMMAND camera_frame_tests
 )
+
+target_sources(camera_isp PRIVATE
+    src/isp/ExposureGain.cpp
+)
+
+add_executable(exposure_gain_tests
+    tests/ExposureGainTests.cpp
+    src/isp/ExposureGain.cpp
+)
+
+target_include_directories(exposure_gain_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(exposure_gain_tests
+    PRIVATE ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME ExposureGainTests
+    COMMAND exposure_gain_tests
+)
