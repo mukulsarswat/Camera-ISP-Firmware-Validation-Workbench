@@ -121,3 +121,29 @@ add_test(
     NAME DenoiseTests
     COMMAND denoise_tests
 )
+
+target_sources(camera_isp
+    PRIVATE
+        src/isp/Sharpen.cpp
+)
+
+add_executable(sharpen_tests
+    tests/SharpenTests.cpp
+    src/isp/Sharpen.cpp
+)
+
+target_include_directories(sharpen_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(sharpen_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME SharpenTests
+    COMMAND sharpen_tests
+)
