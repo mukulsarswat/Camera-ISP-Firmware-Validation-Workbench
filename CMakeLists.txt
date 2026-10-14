@@ -17,6 +17,7 @@ find_package(OpenCV REQUIRED COMPONENTS
 
 add_executable(camera_isp
     src/main.cpp
+    src/camera/CameraFrame.cpp
 )
 
 target_link_libraries(camera_isp
@@ -25,4 +26,28 @@ target_link_libraries(camera_isp
 
 target_include_directories(camera_isp
     PRIVATE ${OpenCV_INCLUDE_DIRS}
+)
+
+
+
+enable_testing()
+
+add_executable(camera_frame_tests
+    tests/CameraFrameTests.cpp
+    src/camera/CameraFrame.cpp
+)
+
+target_include_directories(camera_frame_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(camera_frame_tests
+    PRIVATE ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME CameraFrameTests
+    COMMAND camera_frame_tests
 )
