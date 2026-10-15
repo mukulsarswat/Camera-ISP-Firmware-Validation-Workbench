@@ -224,3 +224,29 @@ add_test(
     NAME SimulatedCameraDriverTests
     COMMAND camera_driver_tests
 )
+add_executable(camera_session_tests
+    tests/CameraProcessingSessionTests.cpp
+    src/camera/CameraProcessingSession.cpp
+    src/camera/SimulatedCameraDriver.cpp
+    src/isp/ISPPipeline.cpp
+    src/isp/ExposureGain.cpp
+    src/isp/WhiteBalance.cpp
+    src/isp/Denoise.cpp
+    src/isp/Sharpen.cpp
+)
+
+target_include_directories(camera_session_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(camera_session_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME CameraProcessingSessionTests
+    COMMAND camera_session_tests
+)
