@@ -250,3 +250,24 @@ add_test(
     NAME CameraProcessingSessionTests
     COMMAND camera_session_tests
 )
+
+add_executable(frame_scheduler_tests
+    tests/FrameSchedulerTests.cpp
+    src/camera/FrameScheduler.cpp
+)
+
+target_include_directories(frame_scheduler_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(frame_scheduler_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME FrameSchedulerTests
+    COMMAND frame_scheduler_tests
+)
