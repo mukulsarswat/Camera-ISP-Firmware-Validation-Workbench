@@ -271,3 +271,30 @@ add_test(
     NAME FrameSchedulerTests
     COMMAND frame_scheduler_tests
 )
+
+add_executable(integrated_frame_processor_tests
+    tests/IntegratedFrameProcessorTests.cpp
+    src/camera/IntegratedFrameProcessor.cpp
+    src/camera/FrameScheduler.cpp
+    src/isp/ISPPipeline.cpp
+    src/isp/ExposureGain.cpp
+    src/isp/WhiteBalance.cpp
+    src/isp/Denoise.cpp
+    src/isp/Sharpen.cpp
+)
+
+target_include_directories(integrated_frame_processor_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(integrated_frame_processor_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME IntegratedFrameProcessorTests
+    COMMAND integrated_frame_processor_tests
+)
