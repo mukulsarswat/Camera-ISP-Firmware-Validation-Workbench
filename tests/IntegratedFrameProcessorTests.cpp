@@ -88,7 +88,9 @@ bool testEmptyQueueReturnsFalse() {
 }
 
 int main() {
+    cv::setNumThreads(1);
     int failures = 0;
+
 
     const auto check = [&](const char* name, bool passed) {
         if (passed) {
