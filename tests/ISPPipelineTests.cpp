@@ -59,6 +59,7 @@ bool testEmptyInputRejected() {
 }
 
 int main() {
+    cv::setNumThreads(1);
     int failures = 0;
 
     if (!testNeutralConfigurationPreservesUniformImage()) {
