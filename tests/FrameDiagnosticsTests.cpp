@@ -10,6 +10,7 @@
 #include <string>
 
 int main() {
+    cv::setNumThreads(1);
     cv::Mat input(64, 80, CV_8UC3, cv::Scalar(100, 120, 140));
 
     isp::ISPConfig config;
