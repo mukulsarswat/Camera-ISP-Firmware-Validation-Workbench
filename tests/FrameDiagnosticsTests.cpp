@@ -35,7 +35,7 @@ int main() {
         }
     }
 
-    const std::string path = "../build/validation_report.csv";
+    const std::string path = "validation_report.csv";
 
     if (!diagnostics::FrameDiagnostics::writeCsv(
             path, 1, input, result)) {
