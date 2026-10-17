@@ -6,3 +6,6 @@ cmake-build-*/
 *.a
 *.dylib
 .env
+# Generated validation artifacts
+/build-tsan/
+/validation_report.csv

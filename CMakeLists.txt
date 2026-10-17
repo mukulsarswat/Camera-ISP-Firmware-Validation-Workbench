@@ -337,3 +337,68 @@ target_include_directories(isp_pipeline_benchmark PRIVATE
 target_link_libraries(isp_pipeline_benchmark PRIVATE
     ${OpenCV_LIBS}
 )
+
+
+add_executable(image_quality_metrics_tests
+    tests/ImageQualityMetricsTests.cpp
+    src/validation/ImageQualityMetrics.cpp
+)
+
+target_include_directories(image_quality_metrics_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(image_quality_metrics_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME ImageQualityMetricsTests
+    COMMAND image_quality_metrics_tests
+)
+
+add_executable(denoise_quality_tests
+    tests/DenoiseQualityTests.cpp
+    src/isp/Denoise.cpp
+    src/validation/ImageQualityMetrics.cpp
+)
+
+target_include_directories(denoise_quality_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(denoise_quality_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME DenoiseQualityTests
+    COMMAND denoise_quality_tests
+)
+
+add_executable(sharpen_quality_tests
+    tests/SharpenQualityTests.cpp
+    src/isp/Sharpen.cpp
+)
+
+target_include_directories(sharpen_quality_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(sharpen_quality_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME SharpenQualityTests
+    COMMAND sharpen_quality_tests
+)
