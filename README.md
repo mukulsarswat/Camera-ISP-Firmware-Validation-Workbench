@@ -1,4 +1,5 @@
-::: {align="center"}
+<div align="center">
+
 # Camera ISP & Firmware Validation Workbench
 
 **A C++17 software simulation of a camera image-processing pipeline and
