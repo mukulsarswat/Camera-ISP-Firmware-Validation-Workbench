@@ -298,3 +298,42 @@ add_test(
     NAME IntegratedFrameProcessorTests
     COMMAND integrated_frame_processor_tests
 )
+
+
+add_executable(fault_injection_tests
+    tests/FaultInjectionTests.cpp
+    src/camera/SimulatedCameraDriver.cpp
+    src/isp/ExposureGain.cpp
+)
+
+target_include_directories(fault_injection_tests PRIVATE
+    include
+    ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(fault_injection_tests PRIVATE
+    ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME FaultInjectionTests
+    COMMAND fault_injection_tests
+)
+
+add_executable(isp_pipeline_benchmark
+    benchmarks/ISPPipelineBenchmark.cpp
+    src/isp/ISPPipeline.cpp
+    src/isp/ExposureGain.cpp
+    src/isp/WhiteBalance.cpp
+    src/isp/Denoise.cpp
+    src/isp/Sharpen.cpp
+)
+
+target_include_directories(isp_pipeline_benchmark PRIVATE
+    include
+    ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(isp_pipeline_benchmark PRIVATE
+    ${OpenCV_LIBS}
+)

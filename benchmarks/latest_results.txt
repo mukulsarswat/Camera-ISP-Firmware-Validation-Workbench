@@ -1,0 +1,7 @@
+Camera ISP Pipeline Benchmark
+Warm-up iterations: 3
+Measured iterations: 30
+
+Resolution       Mean (ms)      Median         P95         Max         FPS
+640x480              8.376       8.240       9.065      10.314     119.384
+1280x720            24.601      23.588      27.714      36.044      40.649
