@@ -7,7 +7,7 @@ firmware-style validation workflow**
 ![C++17](https://img.shields.io/badge/C%2B%2B-17-blue)
 ![CMake](https://img.shields.io/badge/CMake-3.20%2B-064F8C)
 ![OpenCV](https://img.shields.io/badge/OpenCV-4.x%2F5.x-green)
-![Tests](https://img.shields.io/badge/tests-12%20registered-success)
+![Tests](https://img.shields.io/badge/tests-15%20registered-success)
 ![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF)
 
 Designed as a portfolio project exploring camera ISP concepts, C++
@@ -159,6 +159,17 @@ The pipeline supports configurable stages through `isp::ISPConfig`.
 Stage enablement and parameter ranges are defined by the implementation;
 invalid exposure/gain values are covered by tests.
 
+## Image-quality validation
+
+The validation module in `include/validation/` and `src/validation/` provides two image-quality metrics:
+
+- **Mean squared error (MSE):** measures the average squared pixel difference between a reference image and a processed image. Lower values indicate a closer pixel-wise match.
+- **Peak signal-to-noise ratio (PSNR):** expresses reconstruction error in decibels. Higher values indicate lower error; identical images produce infinite PSNR.
+
+The quality tests use synthetic images to check that denoising reduces error relative to a clean reference and that sharpening increases edge strength in a controlled test image.
+
+These tests validate the behavior of the current host-side algorithms under the selected synthetic scenarios. They do not establish perceptual quality across arbitrary images or equivalence with a hardware ISP.
+
 ## Simulated driver and scheduling
 
 ### Simulated driver
@@ -257,23 +268,25 @@ Run all registered tests:
 ctest --test-dir build --output-on-failure
 ```
 
-The current CMake configuration registers 12 test executables covering:
+The current CMake configuration registers **15 test executables** covering:
 
--   Camera frame behavior
--   Exposure/gain
--   White balance
--   Denoising
--   Sharpening
--   ISP pipeline behavior
--   Frame diagnostics
--   Simulated camera driver
--   Camera processing session
--   Frame scheduling
--   Integrated frame processing
--   Fault injection and invalid parameters
+- Camera frame behavior and input validation
+- Exposure/gain processing
+- White balance
+- Denoising behavior and image-quality improvement
+- Sharpening behavior and edge-strength improvement
+- Image quality metrics: mean squared error (MSE) and peak signal-to-noise ratio (PSNR)
+- ISP pipeline behavior and invalid parameters
+- Frame diagnostics and CSV reporting
+- Simulated camera driver and recovery
+- Camera processing session
+- Frame scheduling and deadline accounting
+- Integrated frame processing
+- Fault injection and error scenarios
 
-A passing test suite checks the behaviors encoded in these tests; it
-does not establish hardware-level or hard-real-time correctness.
+The image-quality tests compare synthetic reference images with processed images. Lower MSE indicates a smaller pixel-wise error, while higher PSNR indicates lower error relative to the image's peak intensity. Identical images produce zero MSE and infinite PSNR.
+
+A passing test suite checks the behaviors encoded in these tests; it does not establish hardware-level or hard-real-time correctness.
 
 ## Performance benchmark
 
