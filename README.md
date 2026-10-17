@@ -1,4 +1,3 @@
-<div align="center">
 
 # Camera ISP & Firmware Validation Workbench
 
