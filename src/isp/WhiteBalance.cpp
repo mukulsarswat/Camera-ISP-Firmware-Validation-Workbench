@@ -1,3 +1,4 @@
+
 #include "../../include/isp/WhiteBalance.hpp"
 
 #include <cmath>
@@ -31,25 +32,22 @@ cv::Mat WhiteBalance::apply(
         }
     }
 
-    cv::Mat output = input.clone();
+    // Convert to floating point to perform channel-wise gain adjustment.
+    cv::Mat output;
+    input.convertTo(output, CV_32FC3);
 
-    for (int row = 0; row < output.rows; ++row) {
-        cv::Vec3b* pixels = output.ptr<cv::Vec3b>(row);
+    // OpenCV images use BGR channel order.
+    const cv::Scalar gainScale(
+        blueGain,
+        greenGain,
+        redGain
+    );
 
-        for (int col = 0; col < output.cols; ++col) {
-            pixels[col][0] = cv::saturate_cast<unsigned char>(
-                pixels[col][0] * blueGain
-            );
+    // Apply the corresponding gain to each channel.
+    cv::multiply(output, gainScale, output);
 
-            pixels[col][1] = cv::saturate_cast<unsigned char>(
-                pixels[col][1] * greenGain
-            );
-
-            pixels[col][2] = cv::saturate_cast<unsigned char>(
-                pixels[col][2] * redGain
-            );
-        }
-    }
+    // Convert back to 8-bit, saturating values to the valid range.
+    output.convertTo(output, CV_8UC3);
 
     return output;
 }

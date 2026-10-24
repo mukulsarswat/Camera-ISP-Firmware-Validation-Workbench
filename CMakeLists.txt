@@ -386,19 +386,68 @@ add_executable(sharpen_quality_tests
     tests/SharpenQualityTests.cpp
     src/isp/Sharpen.cpp
 )
-
 target_include_directories(sharpen_quality_tests
     PRIVATE
         include
         ${OpenCV_INCLUDE_DIRS}
 )
-
 target_link_libraries(sharpen_quality_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+add_test(
+    NAME SharpenQualityTests
+    COMMAND sharpen_quality_tests
+)
+
+add_executable(isp_pipeline_quality_tests
+    tests/ISPPipelineQualityTests.cpp
+    src/isp/ISPPipeline.cpp
+    src/isp/ExposureGain.cpp
+    src/isp/WhiteBalance.cpp
+    src/isp/Denoise.cpp
+    src/isp/Sharpen.cpp
+    src/validation/ImageQualityMetrics.cpp
+)
+
+target_include_directories(isp_pipeline_quality_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(isp_pipeline_quality_tests
     PRIVATE
         ${OpenCV_LIBS}
 )
 
 add_test(
-    NAME SharpenQualityTests
-    COMMAND sharpen_quality_tests
+    NAME ISPPipelineQualityTests
+    COMMAND isp_pipeline_quality_tests
+)
+
+add_executable(isp_pipeline_noise_level_tests
+    tests/ISPPipelineNoiseLevelTests.cpp
+    src/isp/ISPPipeline.cpp
+    src/isp/ExposureGain.cpp
+    src/isp/WhiteBalance.cpp
+    src/isp/Denoise.cpp
+    src/isp/Sharpen.cpp
+    src/validation/ImageQualityMetrics.cpp
+)
+
+target_include_directories(isp_pipeline_noise_level_tests
+    PRIVATE
+        include
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(isp_pipeline_noise_level_tests
+    PRIVATE
+        ${OpenCV_LIBS}
+)
+
+add_test(
+    NAME ISPPipelineNoiseLevelTests
+    COMMAND isp_pipeline_noise_level_tests
 )
