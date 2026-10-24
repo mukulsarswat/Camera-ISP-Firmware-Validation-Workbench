@@ -36,4 +36,17 @@ jobs:
         run: ctest --test-dir build --output-on-failure
 
       - name: Run ISP benchmark
-        run: ./build/isp_pipeline_benchmark
+        shell: bash
+        run: |
+          mkdir -p benchmark-results
+          set -o pipefail
+          ./build/isp_pipeline_benchmark | tee benchmark-results/isp-benchmark.txt
+
+      - name: Upload benchmark results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: isp-benchmark-results
+          path: benchmark-results/isp-benchmark.txt
+          if-no-files-found: warn
+          retention-days: 30
